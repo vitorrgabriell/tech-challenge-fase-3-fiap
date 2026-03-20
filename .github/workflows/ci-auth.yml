@@ -1,0 +1,19 @@
+name: CI - Auth Service
+
+on:
+  push:
+    branches: [main]
+    paths: ["services/auth-service/**"]
+  pull_request:
+    branches: [main]
+    paths: ["services/auth-service/**"]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      service_name: auth-service
+      service_path: services/auth-service
+      language: go
+      ecr_repository: togglemaster/auth-service
+    secrets: inherit

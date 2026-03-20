@@ -1,0 +1,25 @@
+aws_region          = "us-east-1"
+project_name        = "togglemaster"
+environment         = "production"
+db_password         = "postgres"
+
+# Networking
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+# EKS
+eks_cluster_version    = "1.31"
+eks_node_instance_type = "t3.medium"
+eks_node_desired       = 2
+eks_node_min           = 1
+eks_node_max           = 4
+
+# RDS
+db_instance_class = "db.t3.micro"
+db_username       = "postgres"
+
+# ElastiCache
+redis_node_type = "cache.t3.micro"
+
+# Services
+services = ["auth", "flag", "targeting", "evaluation", "analytics"]

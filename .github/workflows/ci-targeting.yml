@@ -1,0 +1,19 @@
+name: CI - Targeting Service
+
+on:
+  push:
+    branches: [main]
+    paths: ["services/targeting-service/**"]
+  pull_request:
+    branches: [main]
+    paths: ["services/targeting-service/**"]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      service_name: targeting-service
+      service_path: services/targeting-service
+      language: python
+      ecr_repository: togglemaster/targeting-service
+    secrets: inherit

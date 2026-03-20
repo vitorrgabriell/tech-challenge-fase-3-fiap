@@ -1,0 +1,19 @@
+name: CI - Flag Service
+
+on:
+  push:
+    branches: [main]
+    paths: ["services/flag-service/**"]
+  pull_request:
+    branches: [main]
+    paths: ["services/flag-service/**"]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      service_name: flag-service
+      service_path: services/flag-service
+      language: python
+      ecr_repository: togglemaster/flag-service
+    secrets: inherit

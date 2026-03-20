@@ -1,0 +1,19 @@
+name: CI - Evaluation Service
+
+on:
+  push:
+    branches: [main]
+    paths: ["services/evaluation-service/**"]
+  pull_request:
+    branches: [main]
+    paths: ["services/evaluation-service/**"]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    with:
+      service_name: evaluation-service
+      service_path: services/evaluation-service
+      language: go
+      ecr_repository: togglemaster/evaluation-service
+    secrets: inherit
