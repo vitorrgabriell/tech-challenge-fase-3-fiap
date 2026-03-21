@@ -30,6 +30,7 @@ if not all([AWS_REGION, SQS_QUEUE_URL, DYNAMODB_TABLE_NAME]):
 # Criamos a sessão uma vez
 try:
     session = boto3.Session(region_name=AWS_REGION)
+    print(session)
     
     endpoint_url = os.getenv("AWS_ENDPOINT_URL")
     dynamodb_endpoint = os.getenv("DYNAMODB_ENDPOINT")
