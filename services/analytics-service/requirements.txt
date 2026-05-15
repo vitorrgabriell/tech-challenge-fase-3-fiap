@@ -8,3 +8,7 @@ boto3==1.26.50
 opentelemetry-distro==0.48b0
 opentelemetry-exporter-otlp==1.27.0
 opentelemetry-instrumentation==0.48b0
+opentelemetry-instrumentation-flask==0.48b0
+opentelemetry-instrumentation-wsgi==0.48b0
+opentelemetry-instrumentation-botocore==0.48b0
+opentelemetry-instrumentation-requests==0.48b0

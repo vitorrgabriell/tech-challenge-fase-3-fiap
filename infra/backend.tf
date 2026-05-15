@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "togglemaster-terraform-state-vitor-fiap"
+    bucket       = "togglemaster-terraform-state-vitor-fiap-tc4"
     key          = "fase3/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
