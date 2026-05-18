@@ -1,0 +1,52 @@
+name: Self-Healing Restart
+
+on:
+  repository_dispatch:
+    types: [restart-service]
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract payload
+        id: payload
+        run: |
+          SERVICE="${{ github.event.client_payload.service }}"
+          NAMESPACE="${{ github.event.client_payload.namespace }}"
+          SERVICE="${SERVICE:-auth-service}"
+          NAMESPACE="${NAMESPACE:-tech-challenge}"
+          echo "service=$SERVICE" >> $GITHUB_OUTPUT
+          echo "namespace=$NAMESPACE" >> $GITHUB_OUTPUT
+          echo "🚨 Self-healing acionado | service=$SERVICE namespace=$NAMESPACE"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region us-east-1 --name togglemaster-eks
+
+      - name: Rollout restart
+        run: |
+          kubectl rollout restart deployment/${{ steps.payload.outputs.service }} \
+            -n ${{ steps.payload.outputs.namespace }}
+          kubectl rollout status deployment/${{ steps.payload.outputs.service }} \
+            -n ${{ steps.payload.outputs.namespace }} --timeout=2m
+
+      - name: Notify Discord on success
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"content\":\"✅ **Self-healing executado** | Serviço \`${{ steps.payload.outputs.service }}\` reiniciado com sucesso\"}"
+
+      - name: Notify Discord on failure
+        if: failure()
+        run: |
+          curl -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"content\":\"❌ **Self-healing falhou** | Serviço \`${{ steps.payload.outputs.service }}\` — verificar Actions\"}"
